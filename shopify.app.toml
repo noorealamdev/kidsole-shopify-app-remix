@@ -1,0 +1,33 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
+client_id = "1a82e613ad2a26891523da0fd4508f88"
+name = "Kidsole"
+handle = "kidsole"
+application_url = "https://prime-time-temple-serve.trycloudflare.com"
+embedded = true
+
+[access_scopes]
+# Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
+scopes = "read_customers,read_draft_orders,read_fulfillments,read_inventory,read_locations,read_orders,read_price_rules,read_products,read_shipping,read_shopify_payments_payouts,read_themes,write_customers,write_draft_orders,write_fulfillments,write_inventory,write_locations,write_orders,write_price_rules,write_products,write_script_tags,write_shipping,write_themes"
+
+[auth]
+redirect_urls = [
+  "https://prime-time-temple-serve.trycloudflare.com/auth/callback",
+  "https://prime-time-temple-serve.trycloudflare.com/auth/shopify/callback",
+  "https://prime-time-temple-serve.trycloudflare.com/api/auth/callback"
+]
+
+[webhooks]
+api_version = "2024-10"
+
+  [[webhooks.subscriptions]]
+  topics = [ "app/uninstalled" ]
+  uri = "/webhooks/app/uninstalled"
+
+[pos]
+embedded = false
+
+[build]
+dev_store_url = "codenpy.myshopify.com"
+automatically_update_urls_on_dev = true
+include_config_on_deploy = true

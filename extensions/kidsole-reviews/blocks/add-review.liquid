@@ -1,0 +1,180 @@
+<div class="kidsole-add-review-app-extension">
+  <div class="form-wrapper">
+    <form id="addReviewForm" action="" method="post">
+      <h3 class="text-4xl mb-6">Write a review</h3>
+      {% comment %}<label>{% endcomment %}
+        {% comment %}{% for product in collections.all.products %}{% endcomment %}
+          {% comment %}{% if product.id == 11360739623230 %}{% endcomment %}
+            {% comment %}<h2>Product found!!</h2>{% endcomment %}
+          {% comment %}{% endif %}{% endcomment %}
+        {% comment %}{% endfor %}{% endcomment %}
+      {% comment %}</label>{% endcomment %}
+      <div class="rating-wrapper">
+        <div class="rating-title">Select rating</div>
+        <div class="rating">
+          <input type="radio" id="star5" name="rating" value="5" />
+          <label class="star" for="star5" title="Awesome" aria-hidden="true"></label>
+          <input type="radio" id="star4" name="rating" value="4" />
+          <label class="star" for="star4" title="Great" aria-hidden="true"></label>
+          <input type="radio" id="star3" name="rating" value="3" />
+          <label class="star" for="star3" title="Very good" aria-hidden="true"></label>
+          <input type="radio" id="star2" name="rating" value="2" />
+          <label class="star" for="star2" title="Good" aria-hidden="true"></label>
+          <input type="radio" id="star1" name="rating" value="1" />
+          <label class="star" for="star1" title="Bad" aria-hidden="true"></label>
+        </div>
+      </div>
+      <label for="name">
+        <input type="text" class="form-control" name="name" required="" placeholder="Your name*">
+      </label>
+      <label for="email">
+        <input type="email" class="form-control" name="email" required="" placeholder="Your email*">
+      </label>
+      <label for="content">
+        <textarea class="form-control" name="content" rows="4" required="" placeholder="Share your feedback with us*"></textarea>
+      </label>
+      <input type="hidden" id="shop" name="shop" value="{{ shop.permanent_domain }}">
+      <input type="hidden" id="productId" name="productId" value="">
+      <input type="hidden" id="ip" name="ip" value="">
+      <br>
+      <button id="submitBtn" type="submit" class="sf__btn sf__btn-primary">Submit review</button>
+    </form>
+  </div>
+
+  <div id="errors" style="color: red; padding-top: 20px"></div>
+</div>
+
+
+<script src="https://use.fontawesome.com/7ad89d9866.js"></script>
+<script>
+    $(function () {
+      // Set default rating to 5 stars
+      $('#star5').trigger('click');
+
+      // Get the IP address of the current user
+      $.getJSON("https://api.ipify.org?format=json", function(data) {
+        $('#ip').val(data.ip);
+      })
+
+      // Check if shop and productId available on the URL parameters
+      // And set its value on corresponding hidden fields
+      if ( getUrlParameter('productId') ) {
+        $('#shop').val();
+        $('#productId').val(getUrlParameter('productId'));
+      } else {
+        alert('Url is not valid, please try again');
+        //document.location.href="/";
+      }
+
+      $('#addReviewForm').on('submit', function (e) {
+        e.preventDefault();
+        $('#submitBtn').prop('disabled', true);
+        $.ajax({
+          type: 'post',
+          // Proxy url Shopify https://my-store.myshopify.com/<SubpathPrefix>/<Subpath>/
+          url: '/apps/reviews/',
+          data: $('#addReviewForm').serialize(),
+          success: function (response) {
+            $('#submitBtn').prop('disabled', false);
+            $('#addReviewForm')[0].reset();
+            //console.log(response)
+            if (response.success === true) {
+              alert('Thank you for your review!');
+              //document.location.href="/";
+            } else {
+              alert('Something went wrong, please try again with a valid add review url');
+            }
+          },
+          error: function (jqXHR, exception) {
+            let errorMsg = '';
+            if (jqXHR.status === 0) {
+              errorMsg = 'Not connect.\n Verify Network.';
+            } else if (jqXHR.status === 404) {
+              errorMsg = 'Requested api route not found. [404]';
+            } else if (jqXHR.status === 500) {
+              errorMsg = 'Internal Server Error [500].';
+            } else if (exception === 'parsererror') {
+              errorMsg = 'Requested JSON parse failed.';
+            } else if (exception === 'timeout') {
+              errorMsg = 'Time out error.';
+            } else if (exception === 'abort') {
+              errorMsg = 'Ajax request aborted.';
+            } else {
+              errorMsg = 'Uncaught Error.\n' + jqXHR.responseText;
+            }
+            $('#submitBtn').prop('disabled', false);
+            $('#errors').html(errorMsg);
+          },
+        });
+      });
+
+      function getUrlParameter(sParam) {
+        const sPageURL = window.location.search.substring(1);
+        const sURLVariables = sPageURL.split('&');
+        for (let i = 0; i < sURLVariables.length; i++)
+        {
+          const sParameterName = sURLVariables[i].split('=');
+          if (sParameterName[0] === sParam)
+          {
+            return sParameterName[1];
+          }
+        }
+      }
+
+    });
+</script>
+
+<style>
+  .kidsole-add-review-app-extension {
+    width: 50%;
+    margin: 0 auto;
+  }
+  @media (max-width: 768px) {
+    .kidsole-add-review-app-extension {
+      width: 100%;
+    }
+  }
+  .rating-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .rating {
+    border: none;
+    float: left;
+  }
+  .rating > label {
+    color: #90A0A3;
+    float: right;
+  }
+  .rating > label:before {
+    margin: 5px;
+    font-size: 2em;
+    font-family: FontAwesome;
+    content: "\f005";
+    display: inline-block;
+  }
+  .rating > input {
+    display: none;
+  }
+  .rating > input:checked ~ label,
+  .rating:not(:checked) > label:hover,
+  .rating:not(:checked) > label:hover ~ label {
+    color: #F79426;
+  }
+  .rating > input:checked + label:hover,
+  .rating > input:checked ~ label:hover,
+  .rating > label:hover ~ input:checked ~ label,
+  .rating > input:checked ~ label:hover ~ label {
+    color: #FECE31;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Kidsole Add Review",
+  "target": "section",
+  "settings": [
+  ]
+}
+{% endschema %}
