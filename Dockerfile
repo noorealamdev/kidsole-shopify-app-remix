@@ -8,9 +8,9 @@ ENV NODE_ENV=production
 
 COPY package.json package-lock.json* ./
 
-RUN sudo apt-get update; \
-    sudo apt-get -y upgrade; \
-    sudo apt-get install -y openssl
+RUN sudo apt update; \
+    sudo apt -y upgrade; \
+    sudo apt install -y openssl
 
 
 RUN npm ci --omit=dev && npm cache clean --force
