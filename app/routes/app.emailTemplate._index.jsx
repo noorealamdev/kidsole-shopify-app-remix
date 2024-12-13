@@ -17,6 +17,7 @@ import {Form, Link, useActionData, useLoaderData, useNavigation} from "@remix-ru
 import DataTable from 'datatables.net-dt';
 import {DeleteIcon, EditIcon} from '@shopify/polaris-icons';
 import {authenticate} from "../shopify.server.js";
+import prisma from "../db.server.js";
 import {json} from "@remix-run/node";
 import TextEditor from "../components/TextEditor.client.jsx";
 
