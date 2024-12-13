@@ -15,6 +15,7 @@ import {Modal, TitleBar} from "@shopify/app-bridge-react";
 import {authenticate} from "../shopify.server.js";
 import {useCallback, useEffect, useState} from "react";
 import {Form, useActionData, useLoaderData, useNavigation} from "@remix-run/react";
+import prisma from "../db.server.js";
 import cron from "node-cron";
 import {sendReviewRequestEmail} from "../utils/sendReviewRequestEmail.jsx";
 
