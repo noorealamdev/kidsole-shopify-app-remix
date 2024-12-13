@@ -15,6 +15,7 @@ import {Suspense, useEffect, useState} from "react";
 import {Form, useActionData, useLoaderData} from "@remix-run/react";
 import {json, redirect} from "@remix-run/node";
 import {authenticate} from "../shopify.server.js";
+import prisma from "../db.server.js";
 import TextEditor from "../components/TextEditor.client.jsx";
 import {Resend} from "resend";
 import ReviewRequest from "../emails/ReviewRequest.jsx";
