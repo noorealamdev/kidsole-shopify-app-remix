@@ -1,5 +1,6 @@
 import {authenticate} from "../shopify.server.js";
 import {json} from "@remix-run/node";
+import prisma from "../db.server.js";
 import {Resend} from "resend";
 
 // Loader Function
